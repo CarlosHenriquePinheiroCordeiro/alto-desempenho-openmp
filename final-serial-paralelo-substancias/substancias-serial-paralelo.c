@@ -63,17 +63,17 @@ void montaArquivoArquivoSubstancias(int iIdArquivo) {
     sXml[iTamanhoArquivo] = '\0';
     fclose(oArquivo);
 
-    char **aConteudos = (char **)malloc(sizeof(char *) * MAX_CONTEUDOS);
+    char **sConteudos = (char **)malloc(sizeof(char *) * MAX_CONTEUDOS);
     for (int i = 0; i < MAX_CONTEUDOS; i++) {
-        aConteudos[i] = NULL;
+        sConteudos[i] = NULL;
     }
     int iNumConteudos = 0;
-    montaArquivo(sXml, aConteudos, &iNumConteudos, iIdArquivo);
+    montaArquivo(sXml, sConteudos, &iNumConteudos, iIdArquivo);
 
     for (int i = 0; i < MAX_CONTEUDOS; i++) {
-        free(aConteudos[i]);
+        free(sConteudos[i]);
     }
-    free(aConteudos);
+    free(sConteudos);
     free(sXml);
 }
 
@@ -122,7 +122,6 @@ void trataInformacaoXml(char **sXml) {
     char *sConteudo = (char *)malloc(iTamanho + 1);
     int iIndice     = 0;
     int bDentroTag  = 0;
-
     for (int i = 0; i < iTamanho; ++i) {
         if ((*sXml)[i] == '<') {
             bDentroTag = 1;
@@ -147,17 +146,14 @@ void trataInformacaoXml(char **sXml) {
             }
         }
     }
-
     while (iIndice > 0 && (sConteudo[iIndice - 1] == '\n' || sConteudo[iIndice - 1] == '\r')) {
         --iIndice;
     }
-
     if (iIndice > 0 && sConteudo[iIndice - 1] != ';') {
         sConteudo[iIndice] = ';';
         ++iIndice;
     }
     sConteudo[iIndice] = '\0';
-
     for (int i = 0; i < iIndice - 1; ++i) {
         if (sConteudo[i] == ' ' && sConteudo[i + 1] != ';') {
             sConteudo[i] = '_';
